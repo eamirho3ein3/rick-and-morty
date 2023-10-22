@@ -194,6 +194,7 @@ class _HomePageState extends State<HomePage> {
   void _onSearchChange(String searchText) {
     _searchText = searchText;
     characters.clear();
+    page = 1;
     _getData(context);
   }
 
