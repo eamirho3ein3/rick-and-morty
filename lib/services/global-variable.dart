@@ -1,9 +1,9 @@
 class GlobVariable {
-  static GlobVariable _instance;
+  static GlobVariable? _instance;
   factory GlobVariable() => _instance ??= new GlobVariable._();
   GlobVariable._();
 
-  bool characterListHaveMoreData;
+  bool? characterListHaveMoreData;
 
   bool getCharacterListStatus() {
     return characterListHaveMoreData ?? true;

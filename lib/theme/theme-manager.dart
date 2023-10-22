@@ -1,65 +1,277 @@
 import 'package:flutter/material.dart';
-import 'package:rick_and_morty/theme/storage-manager.dart';
+import 'package:flutter/scheduler.dart';
+import 'package:flutter/services.dart';
+import 'package:rick_and_morty/services/key_list.dart';
+import 'package:rick_and_morty/services/storage-manager.dart';
+import 'package:rick_and_morty/theme/colors.dart';
 
-class ThemeNotifier with ChangeNotifier {
-  final darkTheme = ThemeData(
-    primarySwatch: Colors.grey,
-    primaryColor: const Color(0xFF828283),
-    brightness: Brightness.dark,
-    backgroundColor: const Color(0xFF35363C),
-    accentColor: Colors.white,
-    accentIconTheme: IconThemeData(color: Colors.black),
-    dividerColor: Colors.black12,
-    canvasColor: const Color(0xFF21232A),
-    appBarTheme: AppBarTheme(
-      color: Colors.black,
-    ),
-    textTheme: const TextTheme(
-      headline3: TextStyle(
-          fontSize: 24.0, fontWeight: FontWeight.w700, color: Colors.white),
-      headline4: TextStyle(
-          fontSize: 18.0, fontWeight: FontWeight.w700, color: Colors.white),
-      bodyText1: TextStyle(fontSize: 18.0, color: const Color(0xFF757575)),
-      bodyText2: TextStyle(fontSize: 14.0, color: Colors.white),
-      subtitle1: TextStyle(fontSize: 14.0, color: const Color(0xFF828283)),
-    ),
-  );
+class CustomTheme with ChangeNotifier {
+  ColorPalette _currentColor =
+      SchedulerBinding.instance.window.platformBrightness == Brightness.dark
+          ? CustomColors.dark
+          : CustomColors.light;
 
-  final lightTheme = ThemeData(
-    primarySwatch: Colors.grey,
-    primaryColor: Colors.white,
+  ThemeMode themeMode =
+      SchedulerBinding.instance.window.platformBrightness == Brightness.dark
+          ? ThemeMode.dark
+          : ThemeMode.light;
+
+  ColorPalette get currentColor => _currentColor;
+  bool get isDarkMode => themeMode == ThemeMode.dark;
+
+  Future<void> switchTheme(bool isDark) async {
+    _currentColor = isDark ? CustomColors.dark : CustomColors.light;
+    themeMode = isDark ? ThemeMode.dark : ThemeMode.light;
+    SystemChrome.setSystemUIOverlayStyle(
+        isDark ? SystemUiOverlayStyle.light : SystemUiOverlayStyle.dark);
+
+    await StorageManager.saveData(theme, isDark);
+    notifyListeners();
+  }
+}
+
+class ProjectTheme {
+  // light theme
+  static final lightTheme = ThemeData(
+    primarySwatch: CustomColors.light.primary,
+    primaryColor: CustomColors.light.primary,
     brightness: Brightness.light,
-    backgroundColor: const Color(0xFFE5E5E5),
-    accentColor: Colors.black,
-    accentIconTheme: IconThemeData(color: Colors.white),
-    dividerColor: Colors.white54,
-    canvasColor: Colors.white,
+    iconTheme: IconThemeData(color: CustomColors.light.icon),
+    dividerColor: CustomColors.light.border,
+    splashColor: Colors.black.withOpacity(0.08),
+    primaryColorLight: CustomColors.light.primary,
+    appBarTheme: AppBarTheme(
+      color: CustomColors.light.background,
+      systemOverlayStyle: SystemUiOverlayStyle.dark,
+    ),
+    colorScheme: ColorScheme.fromSwatch().copyWith(
+      secondary: CustomColors.light.secondary,
+      primary: CustomColors.light.primary,
+      brightness: Brightness.light,
+      background: CustomColors.light.background,
+    ),
+    inputDecorationTheme: InputDecorationTheme(
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(80),
+        borderSide: BorderSide.none,
+      ),
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(80),
+        borderSide: BorderSide.none,
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(80),
+        borderSide:
+            BorderSide(width: 1, color: CustomColors.light.interactiveFocus),
+      ),
+      errorBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(80),
+        borderSide: BorderSide(width: 1, color: CustomColors.light.textDanger),
+      ),
+      disabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(80),
+        borderSide: BorderSide(width: 1, color: CustomColors.light.border),
+      ),
+      filled: true,
+      fillColor: CustomColors.light.background,
+      hoverColor: CustomColors.light.background,
+      contentPadding: const EdgeInsets.symmetric(vertical: 12, horizontal: 24),
+      labelStyle: TextStyle(
+          fontSize: 14.0,
+          fontWeight: FontWeight.w400,
+          color: CustomColors.light.textSoft),
+      helperStyle: TextStyle(
+          fontSize: 14.0,
+          fontWeight: FontWeight.w400,
+          color: CustomColors.light.textSoft),
+      counterStyle: TextStyle(
+          fontSize: 12.0,
+          fontWeight: FontWeight.w400,
+          color: CustomColors.light.textSoft),
+    ),
+    chipTheme: ChipThemeData(
+      elevation: 0,
+      pressElevation: 0,
+      brightness: Brightness.dark,
+      disabledColor: Colors.black38,
+      labelStyle: TextStyle(
+          fontSize: 14.0,
+          fontWeight: FontWeight.w400,
+          color: CustomColors.light.text),
+      padding: const EdgeInsets.all(0),
+      secondaryLabelStyle: TextStyle(
+          fontSize: 14.0,
+          fontWeight: FontWeight.w400,
+          color: CustomColors.light.text),
+      secondarySelectedColor: CustomColors.light.secondary,
+    ),
+    cardTheme: CardTheme(
+      color: CustomColors.light.background,
+    ),
+    textTheme: TextTheme(
+      displayLarge: TextStyle(
+        fontSize: 28.0,
+        fontWeight: FontWeight.w500,
+        color: CustomColors.light.text,
+      ),
+      displayMedium: TextStyle(
+        fontSize: 24.0,
+        fontWeight: FontWeight.w500,
+        color: CustomColors.light.text,
+      ),
+      headlineMedium: TextStyle(
+        fontSize: 18.0,
+        fontWeight: FontWeight.w600,
+        color: CustomColors.light.text,
+      ),
+      bodyLarge: TextStyle(
+        fontSize: 18.0,
+        fontWeight: FontWeight.normal,
+        color: CustomColors.light.text,
+      ),
+      bodyMedium: TextStyle(
+        fontSize: 16.0,
+        fontWeight: FontWeight.normal,
+        color: CustomColors.light.text,
+      ),
+      titleMedium: TextStyle(
+        fontSize: 16.0,
+        fontWeight: FontWeight.w600,
+        color: CustomColors.light.text,
+      ),
+      titleSmall: TextStyle(
+        fontSize: 14.0,
+        fontWeight: FontWeight.normal,
+        color: CustomColors.light.text,
+      ),
+      labelLarge: TextStyle(
+        fontSize: 14.0,
+        fontWeight: FontWeight.w500,
+        color: CustomColors.light.text,
+      ),
+      bodySmall: TextStyle(
+        fontSize: 12.0,
+        fontWeight: FontWeight.normal,
+        color: CustomColors.light.text,
+      ),
+    ),
   );
 
-  ThemeData _themeData;
-  ThemeData getTheme() => _themeData;
-
-  ThemeNotifier() {
-    StorageManager.readData('themeMode').then((value) {
-      var themeMode = value ?? 'dark';
-      if (themeMode == 'light') {
-        _themeData = lightTheme;
-      } else {
-        _themeData = darkTheme;
-      }
-      notifyListeners();
-    });
-  }
-
-  void setDarkMode() async {
-    _themeData = darkTheme;
-    StorageManager.saveData('themeMode', 'dark');
-    notifyListeners();
-  }
-
-  void setLightMode() async {
-    _themeData = lightTheme;
-    StorageManager.saveData('themeMode', 'light');
-    notifyListeners();
-  }
+  // dark theme
+  static final darkTheme = ThemeData(
+    primarySwatch: CustomColors.dark.primary,
+    primaryColor: CustomColors.dark.primary,
+    brightness: Brightness.dark,
+    iconTheme: IconThemeData(color: CustomColors.dark.icon),
+    dividerColor: CustomColors.dark.border,
+    splashColor: Colors.black.withOpacity(0.08),
+    primaryColorLight: CustomColors.dark.primary,
+    appBarTheme: AppBarTheme(
+      color: CustomColors.dark.background,
+      systemOverlayStyle: SystemUiOverlayStyle.light,
+    ),
+    colorScheme: ColorScheme.fromSwatch().copyWith(
+      secondary: CustomColors.dark.secondary,
+      primary: CustomColors.dark.primary,
+      brightness: Brightness.dark,
+      background: CustomColors.light.background,
+    ),
+    chipTheme: ChipThemeData(
+      elevation: 0,
+      pressElevation: 0,
+      brightness: Brightness.dark,
+      disabledColor: Colors.black38,
+      labelStyle: TextStyle(
+          fontSize: 14.0,
+          fontWeight: FontWeight.w400,
+          color: CustomColors.dark.text),
+      padding: const EdgeInsets.all(0),
+      secondaryLabelStyle: TextStyle(
+          fontSize: 14.0,
+          fontWeight: FontWeight.w400,
+          color: CustomColors.dark.text),
+      secondarySelectedColor: CustomColors.dark.secondary,
+    ),
+    cardTheme: CardTheme(
+      color: CustomColors.dark.background,
+    ),
+    inputDecorationTheme: InputDecorationTheme(
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(80),
+        borderSide: BorderSide.none,
+      ),
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(80),
+        borderSide: BorderSide.none,
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(80),
+        borderSide:
+            BorderSide(width: 1, color: CustomColors.dark.interactiveFocus),
+      ),
+      errorBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(80),
+        borderSide: BorderSide(width: 1, color: CustomColors.dark.textDanger),
+      ),
+      disabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(80),
+        borderSide: BorderSide(width: 1, color: CustomColors.dark.border),
+      ),
+      filled: true,
+      fillColor: CustomColors.dark.background,
+      hoverColor: CustomColors.dark.background,
+      contentPadding: const EdgeInsets.symmetric(vertical: 12, horizontal: 24),
+      labelStyle: TextStyle(
+          fontSize: 14.0,
+          fontWeight: FontWeight.w400,
+          color: CustomColors.dark.textSoft),
+      helperStyle: TextStyle(
+          fontSize: 14.0,
+          fontWeight: FontWeight.w400,
+          color: CustomColors.dark.textSoft),
+      counterStyle: TextStyle(
+          fontSize: 12.0,
+          fontWeight: FontWeight.w400,
+          color: CustomColors.dark.textSoft),
+    ),
+    textTheme: TextTheme(
+      displayLarge: TextStyle(
+          fontSize: 28.0,
+          fontWeight: FontWeight.w500,
+          color: CustomColors.dark.text),
+      displayMedium: TextStyle(
+          fontSize: 24.0,
+          fontWeight: FontWeight.w500,
+          color: CustomColors.dark.text),
+      headlineMedium: TextStyle(
+          fontSize: 18.0,
+          fontWeight: FontWeight.w600,
+          color: CustomColors.dark.text),
+      bodyLarge: TextStyle(
+          fontSize: 18.0,
+          fontWeight: FontWeight.normal,
+          color: CustomColors.dark.text),
+      bodyMedium: TextStyle(
+          fontSize: 16.0,
+          fontWeight: FontWeight.normal,
+          color: CustomColors.dark.text),
+      titleMedium: TextStyle(
+          fontSize: 16.0,
+          fontWeight: FontWeight.w600,
+          color: CustomColors.dark.text),
+      titleSmall: TextStyle(
+          fontSize: 14.0,
+          fontWeight: FontWeight.normal,
+          color: CustomColors.dark.text),
+      labelLarge: TextStyle(
+          fontSize: 14.0,
+          fontWeight: FontWeight.w500,
+          color: CustomColors.dark.text),
+      bodySmall: TextStyle(
+        fontSize: 12.0,
+        fontWeight: FontWeight.normal,
+        color: CustomColors.dark.text,
+      ),
+    ),
+  );
 }

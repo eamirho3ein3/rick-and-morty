@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:rick_and_morty/pages/home/home-bloc.dart';
+import 'package:rick_and_morty/pages/home/bloc/home_bloc.dart';
 
 class SearchWidget extends StatelessWidget {
   final FocusNode focus;
   final TextEditingController controller;
-  final HomeBloc homeBloc;
+  final HomeBloc? homeBloc;
   final Function onSearchChange;
   SearchWidget(this.controller, this.onSearchChange, this.homeBloc, this.focus);
   @override
@@ -23,9 +23,8 @@ class SearchWidget extends StatelessWidget {
           ),
           prefixIcon: Icon(
             Icons.search,
-            color: Theme.of(context).textTheme.bodyText1.color,
           ),
-          fillColor: Theme.of(context).accentColor,
+          fillColor: Theme.of(context).colorScheme.surface,
           filled: true,
         ),
         focusNode: focus,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rick_and_morty/models/character.dart';
+import 'package:rick_and_morty/services/helper.dart';
 
 class CharacterItem extends StatelessWidget {
   final Character character;
@@ -13,7 +14,7 @@ class CharacterItem extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Container(
-              color: Theme.of(context).accentColor,
+              color: Theme.of(context).colorScheme.secondary,
               child: Image.network(
                 character.image,
                 fit: BoxFit.cover,
@@ -25,8 +26,9 @@ class CharacterItem extends StatelessWidget {
               flex: 2,
               child: Container(
                 padding: EdgeInsets.symmetric(vertical: 15, horizontal: 21),
-                decoration:
-                    BoxDecoration(color: Theme.of(context).backgroundColor),
+                decoration: BoxDecoration(
+                  color: customTheme(context).currentColor.surface,
+                ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -37,7 +39,7 @@ class CharacterItem extends StatelessWidget {
                         // title
                         Text(
                           character.title,
-                          style: Theme.of(context).textTheme.headline4,
+                          style: Theme.of(context).textTheme.headlineMedium,
                         ),
 
                         // status
@@ -77,7 +79,7 @@ class CharacterItem extends StatelessWidget {
         // title
         Text(
           title + ':',
-          style: Theme.of(context).textTheme.subtitle1,
+          style: Theme.of(context).textTheme.titleMedium,
         ),
 
         // value
@@ -85,7 +87,7 @@ class CharacterItem extends StatelessWidget {
           padding: const EdgeInsets.only(top: 2),
           child: Text(
             value,
-            style: Theme.of(context).textTheme.bodyText2,
+            style: Theme.of(context).textTheme.bodyMedium,
           ),
         ),
       ],
@@ -106,7 +108,7 @@ class CharacterItem extends StatelessWidget {
                   ? const Color(0xFF50CD30)
                   : character.status == LifeStatus.Dead
                       ? const Color(0xFFC82B2F)
-                      : const Color(0xFFDCDCDC),
+                      : Color.fromARGB(255, 230, 216, 135),
             ),
           ),
           Padding(
@@ -117,7 +119,7 @@ class CharacterItem extends StatelessWidget {
                   : character.status == LifeStatus.Dead
                       ? 'Dead'
                       : 'Unknown',
-              style: Theme.of(context).textTheme.bodyText2,
+              style: Theme.of(context).textTheme.bodyMedium,
             ),
           ),
         ],
