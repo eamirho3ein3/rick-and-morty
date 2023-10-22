@@ -218,8 +218,8 @@ class ProjectTheme {
         borderSide: BorderSide(width: 1, color: CustomColors.dark.border),
       ),
       filled: true,
-      fillColor: CustomColors.dark.background,
-      hoverColor: CustomColors.dark.background,
+      fillColor: CustomColors.dark.surface,
+      hoverColor: CustomColors.dark.surface,
       contentPadding: const EdgeInsets.symmetric(vertical: 12, horizontal: 24),
       labelStyle: TextStyle(
           fontSize: 14.0,

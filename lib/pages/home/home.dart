@@ -11,6 +11,8 @@ import 'package:rick_and_morty/pages/home/widgets/search.dart';
 import 'package:rick_and_morty/services/helper.dart';
 
 class HomePage extends StatefulWidget {
+  static const String route = "/home";
+
   @override
   _HomePageState createState() => _HomePageState();
 }

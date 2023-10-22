@@ -14,17 +14,16 @@ class SearchWidget extends StatelessWidget {
       child: TextField(
         keyboardType: TextInputType.text,
         controller: controller,
-        style: Theme.of(context).textTheme.bodyText1,
+        style: Theme.of(context).textTheme.bodyLarge,
         decoration: InputDecoration(
           hintText: 'Search Name',
-          hintStyle: Theme.of(context).textTheme.bodyText1,
+          hintStyle: Theme.of(context).textTheme.bodyLarge,
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10),
           ),
           prefixIcon: Icon(
             Icons.search,
           ),
-          fillColor: Theme.of(context).colorScheme.surface,
           filled: true,
         ),
         focusNode: focus,
