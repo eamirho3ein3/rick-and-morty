@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rick_and_morty/pages/home/bloc/home_bloc.dart';
+import 'package:rick_and_morty/services/helper.dart';
 
 class SearchWidget extends StatelessWidget {
   final FocusNode focus;
@@ -24,6 +25,7 @@ class SearchWidget extends StatelessWidget {
           prefixIcon: Icon(
             Icons.search,
           ),
+          fillColor: customTheme(context).currentColor.surface,
           filled: true,
         ),
         focusNode: focus,
